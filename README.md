@@ -1,26 +1,19 @@
-# DEVELOPERS GUIDE #
+# Developer's Guide #
 
 ### Getting Started ###
 
-* Clone the application (API) with [git clone https://antoroko@bitbucket.org/antoroko/taxi-home-driver.git](Link URL) or use ssh [git clone git@bitbucket.org:antoroko/taxi-home-driver.git](Link URL).
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+Clone the application with:
 
-### How do I get set up? ###
+* HTTPS `git clone https://antoroko@bitbucket.org/antoroko/taxi-home-driver.git` 
+* SSH `git clone git@bitbucket.org:antoroko/taxi-home-driver.git`
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+### Dependencies ###
 
-### Contribution guidelines ###
+* nodejs v6.9.1
+* npm 4.0.2
 
-* Writing tests
-* Code review
-* Other guidelines
+Run `npm install -g cordova ionic` to install latest cordova and ionic
 
-### Who do I talk to? ###
+### Running The Server ###
 
-* Repo owner or admin
-* Other community or team contact
+* Run `ionic serve --nolivereload`
