@@ -1,29 +1,19 @@
-# README #
+# Developer's Guide #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+### Getting Started ###
 
-### What is this repository for? ###
+Clone the application with:
 
-* Quick summary
-* Version
-* [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
+* HTTPS `git clone https://antoroko@bitbucket.org/antoroko/taxi-home-driver.git` 
+* SSH `git clone git@bitbucket.org:antoroko/taxi-home-driver.git`
 
-### How do I get set up? ###
+### Dependencies ###
 
-* Summary of set up
-* Configuration
-* Dependencies
-* Database configuration
-* How to run tests
-* Deployment instructions
+* nodejs v6.9.1
+* npm 4.0.2
 
-### Contribution guidelines ###
+Run `npm install -g cordova ionic` to install latest cordova and ionic
 
-* Writing tests
-* Code review
-* Other guidelines
+### Running The Server ###
 
-### Who do I talk to? ###
-
-* Repo owner or admin
-* Other community or team contact
+* Run `ionic serve --nolivereload`
