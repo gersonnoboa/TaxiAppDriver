@@ -4,8 +4,8 @@
 
 Clone the application with:
 
-* HTTPS `git clone <link>` 
-* SSH `git clone <link>`
+* HTTPS `git clone <https-link>` 
+* SSH `git clone <ssh-link>`
 
 ### Dependencies ###
 
