@@ -4,8 +4,8 @@
 
 Clone the application with:
 
-* HTTPS `git clone https://antoroko@bitbucket.org/agile_project/taxi-home-driver.git` 
-* SSH `git clone git@bitbucket.org:agile_project/taxi-home-driver.git`
+* HTTPS `git clone <link>` 
+* SSH `git clone <link>`
 
 ### Dependencies ###
 
