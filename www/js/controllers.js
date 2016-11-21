@@ -29,6 +29,26 @@ angular.module('starter.controllers', [])
     $scope.modal.show();
   };
 
+})
+
+.controller('RegisterCtrl', function ($scope, $timeout, $location) {
+  // Simulate registration with this controller
+
+  $scope.registerData = {};
+
+  $scope.doRegister = function () {
+    console.log('Simulating Register');
+
+    // Registration would be done here
+    $timeout(function() {
+      $location.path('/login');
+    }, 1000);
+  }
+})
+
+.controller('LoginCtrl', function ($scope, $timeout, $location) {
+  $scope.loginData = {};
+
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
     console.log('Doing login', $scope.loginData);
@@ -36,9 +56,22 @@ angular.module('starter.controllers', [])
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
     $timeout(function() {
-      $scope.closeLogin();
+      $location.path('/app/playlists');
     }, 1000);
   };
+
+  // Open the login modal
+  $scope.showRegister = function() {
+    $location.path('/register');
+  };
+})
+
+.controller('InvoicesCtrl', function ($scope) {
+  $scope.invoices = [
+    {title: "Invoice for September 2016", date: "2016-10-01", id: 1},
+    {title: "Invoice for October 2016", date: "2016-11-01", id: 2},
+    {title: "Invoice for November 2016", date: "2016-12-01", id: 3}
+  ];
 })
 
 .controller('PlaylistsCtrl', function($scope) {
