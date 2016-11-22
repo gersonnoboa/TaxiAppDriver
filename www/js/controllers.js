@@ -1,6 +1,6 @@
-angular.module('starter.controllers', [])
+angular.module('taxi_home_driver.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $location) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -13,7 +13,7 @@ angular.module('starter.controllers', [])
   $scope.loginData = {};
 
   // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
+  $ionicModal.fromTemplateUrl('templates/new_request.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modal = modal;
@@ -21,36 +21,55 @@ angular.module('starter.controllers', [])
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
+    //$scope.modal.show();
     $scope.modal.hide();
   };
 
   // Open the login modal
-  $scope.login = function() {
-    $scope.modal.show();
+  $scope.logout = function() {
+    $location.path('/login');
   };
+
+})
+
+.controller('RegisterCtrl', function ($scope, $timeout, $location) {
+  // Simulate registration with this controller
+
+  $scope.registerData = {};
+
+  $scope.doRegister = function () {
+
+    // Registration would be done here
+    $timeout(function() {
+      $location.path('/login');
+    }, 1000);
+  }
+})
+
+.controller('LoginCtrl', function ($scope, $timeout, $location) {
+  $scope.loginData = {};
 
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
-    console.log('Doing login', $scope.loginData);
 
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
     $timeout(function() {
-      $scope.closeLogin();
+      $location.path('/app/dashboard');
     }, 1000);
+  };
+
+  // Open the login modal
+  $scope.showRegister = function() {
+    $location.path('/register');
   };
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
+.controller('InvoicesCtrl', function($scope, InvoicesService) {
+  $scope.invoices = InvoicesService.getInvoices();
 })
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('InvoiceCtrl', function($scope, $stateParams, InvoicesService) {
+  var currentId = $stateParams.id;
+  $scope.invoice = InvoicesService.getInvoice(currentId);
 });
