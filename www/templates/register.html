@@ -5,6 +5,7 @@
   <ion-content>
     <form ng-submit="doRegister()">
       <div class="list">
+        <input type="hidden" ng-model="registerData.user_type" value="Driver">
         <label class="item item-input">
           <span class="input-label">First Name</span>
           <input type="text" ng-model="registerData.first_name">
@@ -32,6 +33,10 @@
         <label class="item item-input">
           <span class="input-label">Password</span>
           <input type="password" ng-model="registerData.password">
+        </label>
+        <label class="item item-input">
+          <span class="input-label">Confirm Password</span>
+          <input type="password" ng-model="registerData.confirmation_password">
         </label>
         <label class="item">
           <button class="button button-block button-positive" type="submit">Register</button>
