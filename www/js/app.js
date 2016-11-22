@@ -64,7 +64,7 @@ angular.module('taksi_driver', ['ionic', 'taksi_driver.controllers'])
   })
 
   .state('app.invoice', {
-    url: '/invoice',
+    url: '/invoice/:id',
     views: {
       'menuContent': {
         templateUrl: 'templates/invoice.html',

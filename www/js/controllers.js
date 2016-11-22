@@ -69,7 +69,6 @@ angular.module('taksi_driver.controllers', [])
 
 .controller('InvoicesCtrl', function($scope, InvoicesService) {
   $scope.invoices = InvoicesService.getInvoices();
-  console.log("Invoices: ", $scope.invoices);
 })
 
 .controller('InvoiceCtrl', function($scope, $stateParams, InvoicesService) {
