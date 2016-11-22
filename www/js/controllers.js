@@ -1,6 +1,6 @@
-angular.module('starter.controllers', [])
+angular.module('taksi_driver.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $location) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -13,7 +13,7 @@ angular.module('starter.controllers', [])
   $scope.loginData = {};
 
   // Create the login modal that we will use later
-  $ionicModal.fromTemplateUrl('templates/login.html', {
+  $ionicModal.fromTemplateUrl('templates/new_request.html', {
     scope: $scope
   }).then(function(modal) {
     $scope.modal = modal;
@@ -21,12 +21,13 @@ angular.module('starter.controllers', [])
 
   // Triggered in the login modal to close it
   $scope.closeLogin = function() {
+    //$scope.modal.show();
     $scope.modal.hide();
   };
 
   // Open the login modal
-  $scope.login = function() {
-    $scope.modal.show();
+  $scope.logout = function() {
+    $location.path('/login');
   };
 
 })
@@ -56,7 +57,7 @@ angular.module('starter.controllers', [])
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
     $timeout(function() {
-      $location.path('/app/playlists');
+      $location.path('/app/dashboard');
     }, 1000);
   };
 
@@ -66,24 +67,12 @@ angular.module('starter.controllers', [])
   };
 })
 
-.controller('InvoicesCtrl', function ($scope) {
-  $scope.invoices = [
-    {title: "Invoice for September 2016", date: "2016-10-01", id: 1},
-    {title: "Invoice for October 2016", date: "2016-11-01", id: 2},
-    {title: "Invoice for November 2016", date: "2016-12-01", id: 3}
-  ];
+.controller('InvoicesCtrl', function($scope, InvoicesService) {
+  $scope.invoices = InvoicesService.getInvoices();
+  console.log("Invoices: ", $scope.invoices);
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
-})
-
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('InvoiceCtrl', function($scope, $stateParams, InvoicesService) {
+  var currentId = $stateParams.id;
+  $scope.invoice = InvoicesService.getInvoice(currentId);
 });
