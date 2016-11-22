@@ -1,4 +1,4 @@
-angular.module('taksi_driver.controllers', [])
+angular.module('taxi_home_driver.controllers', [])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $location) {
 

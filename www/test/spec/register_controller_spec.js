@@ -8,7 +8,7 @@
 describe('Registration Test Suite', function () {
 
 
-  beforeEach(module('taksi_driver'));
+  beforeEach(module('taxi_home_driver'));
 
   var RegisterCtrl, scope;
 

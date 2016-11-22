@@ -4,7 +4,7 @@
 
 'use strict';
 
-var app = angular.module('taksi_driver');
+var app = angular.module('taxi_home_driver');
 
 app.service('InvoicesService', function () {
   var invoicesList = [
