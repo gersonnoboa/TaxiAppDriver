@@ -4,8 +4,9 @@
 
 'use strict';
 
-var app = angular.module('taxi_home_driver');
+angular.module('taxi_home_driver.services', ['ngResource'])
 
-app.service('UsersService', function ($resource) {
+.service('UsersService', function ($resource) {
+
   return $resource('http://localhost:3000/api/users', {});
 });

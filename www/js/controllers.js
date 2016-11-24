@@ -1,4 +1,4 @@
-angular.module('taxi_home_driver.controllers', [])
+angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
 .controller('AppCtrl', function($scope, $ionicModal, $timeout, $location) {
 
@@ -32,7 +32,7 @@ angular.module('taxi_home_driver.controllers', [])
 
 })
 
-.controller('RegisterCtrl', function ($scope, $timeout, $location) {
+.controller('RegisterCtrl', function ($scope, $timeout, $location, UsersService) {
   // Simulate registration with this controller
 
   $scope.registerData = {};
@@ -43,6 +43,8 @@ angular.module('taxi_home_driver.controllers', [])
     $timeout(function() {
       $location.path('/login');
     }, 1000);
+
+    //UsersService.save({latitude: $scope.latitude, longitude: $scope.longitude});
   }
 })
 
