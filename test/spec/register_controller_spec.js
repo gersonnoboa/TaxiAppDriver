@@ -31,7 +31,7 @@ describe('Registration Test Suite', function () {
 
   });
 
-  it('should submit a request to the backend service', function () {
+  xit('should submit a request to the backend service', function () {
     $httpBackend
       .expectPOST('http://localhost:3000/api/users')
       .respond(201);
