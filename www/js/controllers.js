@@ -50,6 +50,8 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
 .controller('LoginCtrl', function ($scope, $timeout, $location) {
   $scope.loginData = {};
+  $scope.loginStatus = '';
+  $scope.user_token = '';
 
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
