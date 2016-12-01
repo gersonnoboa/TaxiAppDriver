@@ -4,8 +4,12 @@
 
 'use strict';
 
-var app = angular.module('taxi_home_driver');
+angular.module('taxi_home_driver.services', ['ngResource'])
 
-app.service('UsersService', function ($resource) {
-  return $resource('http://localhost:3000/api/users', {});
+.service('UsersService', function ($resource) {
+
+  return $resource(ROOT_URI+'/users', {}, {
+    login: {method:'POST', url: ROOT_URI+'/users/login'},
+    logout: {method:'POST', url: ROOT_URI+'/users/logout'}
+  });
 });
