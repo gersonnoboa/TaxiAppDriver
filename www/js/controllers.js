@@ -36,13 +36,25 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   // Simulate registration with this controller
 
   $scope.registerData = {};
+  $scope.status_msg = "";
 
   $scope.doRegister = function () {
 
-    // Registration would be done here
-    $timeout(function() {
+    /*$timeout(function() {
       $location.path('/login');
-    }, 1000);
+    }, 1000);*/
+    // Registration would be done here
+    UsersService.save($scope.registerData, function (data) {
+      // Check the response
+      if (data != "error") {
+        // successful registration
+        $location.path('/login');
+        $scope.status_msg = "";
+      } else {
+        // Error message here
+        $scope.status_msg = "Registration failed";
+      }
+    });
 
     //UsersService.save({latitude: $scope.latitude, longitude: $scope.longitude});
   }
@@ -52,15 +64,27 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.loginData = {};
   $scope.loginStatus = '';
   $scope.user_token = '';
+  $scope.login_msg = "";
 
   // Perform the login action when the user submits the login form
   $scope.doLogin = function() {
 
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
-    $timeout(function() {
+    /*$timeout(function() {
       $location.path('/app/dashboard');
-    }, 1000);
+    }, 1000);*/
+    UsersService.save($scope.loginData, function (data) {
+      // Check the response
+      if (data != "error") {
+        // successful registration
+        $location.path('/app/dashboard');
+        $scope.login_msg = "";
+      } else {
+        // Error message here
+        $scope.login_msg = "Incorrect username/password";
+      }
+    });
   };
 
   // Open the login modal

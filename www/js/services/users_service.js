@@ -8,5 +8,8 @@ angular.module('taxi_home_driver.services', ['ngResource'])
 
 .service('UsersService', function ($resource) {
 
-  return $resource(ROOT_URI+'/users', {});
+  return $resource(ROOT_URI+'/users', {}, {
+    login: {method:'POST', url: ROOT_URI+'/users/login'},
+    logout: {method:'POST', url: ROOT_URI+'/users/logout'}
+  });
 });
