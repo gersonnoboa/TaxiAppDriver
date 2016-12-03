@@ -1,6 +1,6 @@
 angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $location) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $location, PusherService) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -11,23 +11,60 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   // Form data for the login modal
   $scope.loginData = {};
+  $scope.new_request_msg = "";
+  $scope.new_request_data = {};
 
-  // Create the login modal that we will use later
+  PusherService.onMessage(function(response) {
+    //$scope.asyncNotification = response.message;
+    if (!!response.action) {
+      if (response.action == 'new_request') {
+        $scope.new_request_msg = response.message;
+        $scope.new_request_data = response.data;
+        $scope.modal.show();
+      } else if (response.action == 'cancel_request') {
+        $scope.new_request_msg = '';
+        $scope.new_request_data = {};
+        $scope.modal.hide();
+      }
+    }
+
+  });
+
+  // Create the modal that we will use later
   $ionicModal.fromTemplateUrl('templates/new_request.html', {
-    scope: $scope
+    scope: $scope,
+    animation: 'slide-in-up'
   }).then(function(modal) {
     $scope.modal = modal;
   });
 
   // Triggered in the login modal to close it
-  $scope.closeLogin = function() {
+  $scope.closeModal = function() {
     //$scope.modal.show();
     $scope.modal.hide();
+  };
+
+  $scope.showNewRequest = function() {
+    //$scope.new_request_msg = '';
+    var channel = Pusher.instances[0].channel('bookings');
+    channel.emit('async_notification', {message: 'Your taxi will arrive in 3 minutes', action: 'new_request'})
   };
 
   // Open the login modal
   $scope.logout = function() {
     $location.path('/login');
+  };
+
+  $scope.acceptRequest = function() {
+    console.log('I will now accept');
+    // show loader
+    $scope.modal.hide();
+  };
+
+  $scope.rejectRequest = function() {
+    console.log('I will now reject');
+    // show loader
+    $scope.modal.hide();
   };
 
 })
