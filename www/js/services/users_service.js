@@ -10,6 +10,7 @@ angular.module('taxi_home_driver.services', ['ngResource'])
 
   return $resource(ROOT_URI+'/users', {}, {
     login: {method:'POST', url: ROOT_URI+'/users/login'},
-    logout: {method:'POST', url: ROOT_URI+'/users/logout'}
+    logout: {method:'POST', url: ROOT_URI+'/users/logout'},
+    setStatus: {method: 'POST', url: ROOT_URI+'/users/status'}
   });
 });

@@ -1,6 +1,6 @@
 angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $location, PusherService, BookingService) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $location, PusherService, BookingService, UsersService) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -15,6 +15,8 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.new_request_data = {};
   $scope.current_request = {};
   $scope.display_msg = "";
+  $scope.statusData = {status: 'inactive'};
+  $scope.status_msg = "";
 
   PusherService.onMessage(function(response) {
     //$scope.asyncNotification = response.message;
@@ -72,21 +74,20 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
           $scope.new_request_data = {};
           $scope.modal.hide();
           $scope.display_msg = "";
+          $scope.statusData.status = 'busy';
         } else {
           // Sad face path
           $scope.display_msg = "Request could not be accepted at this time";
-          console.log('Request accept failed');
         }
       })
       .error(function() {
         // error here
         $scope.display_msg = "Request could not be accepted at this time";
-        console.log('Request not accepted');
       });
   };
 
   $scope.rejectRequest = function() {
-    console.log('I will now reject');
+    //console.log('I will now reject');
     BookingService.rejectBooking({request_id: $scope.new_request_data.id, user_token: USER_TOKEN})
       .success(function(response) {
         //console.log('Accept response', response);
@@ -99,8 +100,30 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
       .error(function() {
         // error here
         $scope.display_msg = "Request could not be rejected at this time";
-        console.log('Request not accepted');
       });
+  };
+
+  $scope.changeStatus = function() {
+    console.log('I will set the status here');
+    UsersService.setStatus({token: USER_TOKEN, status: $scope.statusData.status},
+      function(response) {
+        //console.log('Status change data', response);
+        // on success
+        if (response.status == 'success') {
+          $scope.status_msg = "status successfully set";
+          // Triggers to test workflow of active status
+        } else {
+          // Sad face path
+          $scope.status_msg = "Setting new status failed";
+        }
+      }, function() {
+        // on error
+        $scope.status_msg = "Status could not be set at this time";
+        $scope.statusData.status = "";
+    });
+    setTimeout(function () {
+      $scope.status_msg = "";
+    }, 5000);
   };
 
 })
