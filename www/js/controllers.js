@@ -1,6 +1,6 @@
 angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $location, PusherService) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $location, PusherService, BookingService) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -13,6 +13,8 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.loginData = {};
   $scope.new_request_msg = "";
   $scope.new_request_data = {};
+  $scope.current_request = {};
+  $scope.display_msg = "";
 
   PusherService.onMessage(function(response) {
     //$scope.asyncNotification = response.message;
@@ -47,7 +49,10 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.showNewRequest = function() {
     //$scope.new_request_msg = '';
     var channel = Pusher.instances[0].channel('bookings');
-    channel.emit('async_notification', {message: 'Your taxi will arrive in 3 minutes', action: 'new_request'})
+    channel.emit('async_notification', {message: 'Ride From Kabaumaja to Raatuse', action: 'new_request', data: {id: 2}});
+    /*setTimeout(function () {
+      channel.emit('async_notification', {message: 'Ride From Kabaumaja to Raatuse', action: 'cancel_request', data: {id: 2}});
+    }, 20000);*/
   };
 
   // Open the login modal
@@ -56,15 +61,46 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   };
 
   $scope.acceptRequest = function() {
-    console.log('I will now accept');
+    //console.log('I will now accept');
     // show loader
-    $scope.modal.hide();
+    BookingService.acceptBooking({request_id: $scope.new_request_data.id, user_token: USER_TOKEN})
+      .success(function(response) {
+        //console.log('Accept response', response);
+        if (response.status == 'success') {
+          $scope.current_request = $scope.new_request_data;
+          $scope.current_request.status = response.data.status
+          $scope.new_request_data = {};
+          $scope.modal.hide();
+          $scope.display_msg = "";
+        } else {
+          // Sad face path
+          $scope.display_msg = "Request could not be accepted at this time";
+          console.log('Request accept failed');
+        }
+      })
+      .error(function() {
+        // error here
+        $scope.display_msg = "Request could not be accepted at this time";
+        console.log('Request not accepted');
+      });
   };
 
   $scope.rejectRequest = function() {
     console.log('I will now reject');
-    // show loader
-    $scope.modal.hide();
+    BookingService.rejectBooking({request_id: $scope.new_request_data.id, user_token: USER_TOKEN})
+      .success(function(response) {
+        //console.log('Accept response', response);
+        $scope.current_request = {};
+        $scope.new_request_data = {};
+        $scope.modal.hide();
+        $scope.display_msg = "";
+        alert("request rejected");
+      })
+      .error(function() {
+        // error here
+        $scope.display_msg = "Request could not be rejected at this time";
+        console.log('Request not accepted');
+      });
   };
 
 })
