@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 // 'starter.controllers' is found in controllers.js
-angular.module('taxi_home_driver', ['ionic', 'taxi_home_driver.controllers'])
+angular.module('taxi_home_driver', ['ionic', 'taxi_home_driver.controllers', 'taxi_home_driver.services'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {

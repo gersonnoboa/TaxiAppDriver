@@ -2,7 +2,7 @@
  * Created by Victor on 03/12/2016.
  */
 
-var app = angular.module('taxi_home_driver');
+var app = angular.module('taxi_home_driver.services');
 
 app.service('PusherService', function ($rootScope) {
   Pusher.logToConsole = true;

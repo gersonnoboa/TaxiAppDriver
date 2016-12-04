@@ -16,13 +16,13 @@ describe('Request action test suite', function() {
     appCtrl = $controller('AppCtrl', {$scope: scope});
   }));
 
-  it('should have needed data defined', function() {
+  xit('should have needed data defined', function() {
     expect(scope.new_request_msg).toBeDefined();
     expect(scope.acceptRequest).toBeDefined();
     expect(scope.rejectRequest).toBeDefined();
   });
 
-  it('should show new request data on push', function() {
+  xit('should show new request data on push', function() {
     var channel = Pusher.instances[0].channel('bookings');
     channel.emit('async_notification', {message: 'You have received a new request', action: 'new_request', data: {id: 2}});
     expect(scope.new_request_msg).toBe('You have received a new request');
@@ -31,7 +31,7 @@ describe('Request action test suite', function() {
     }));
   });
 
-  it('should have no request message on request cancel push', function() {
+  xit('should have no request message on request cancel push', function() {
     var channel = Pusher.instances[0].channel('bookings');
     channel.emit('async_notification', {action: 'cancel_request'});
     expect(scope.new_request_msg).toBe('You have received a new request');

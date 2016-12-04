@@ -6,7 +6,6 @@
 'use strict';
 
 var app = angular.module('taxi_home_driver.services');
-
 app.service('BookingService', function ($http) {
   return {
     acceptBooking: function(data) {

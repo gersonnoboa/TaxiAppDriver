@@ -17,6 +17,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.display_msg = "";
   $scope.statusData = {status: 'inactive'};
   $scope.status_msg = "";
+  $scope.profileData = {};
 
   PusherService.onMessage(function(response) {
     //$scope.asyncNotification = response.message;
@@ -63,14 +64,13 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   };
 
   $scope.acceptRequest = function() {
-    //console.log('I will now accept');
     // show loader
     BookingService.acceptBooking({request_id: $scope.new_request_data.id, user_token: USER_TOKEN})
       .success(function(response) {
         //console.log('Accept response', response);
         if (response.status == 'success') {
           $scope.current_request = $scope.new_request_data;
-          $scope.current_request.status = response.data.status
+          $scope.current_request.status = response.data.status;
           $scope.new_request_data = {};
           $scope.modal.hide();
           $scope.display_msg = "";
@@ -104,7 +104,6 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   };
 
   $scope.changeStatus = function() {
-    console.log('I will set the status here');
     UsersService.setStatus({token: USER_TOKEN, status: $scope.statusData.status},
       function(response) {
         //console.log('Status change data', response);
@@ -124,6 +123,21 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
     setTimeout(function () {
       $scope.status_msg = "";
     }, 5000);
+  };
+
+  $scope.updateProfile = function() {
+    UsersService.update({token: USER_TOKEN, user: $scope.profileData},
+      function(response) {
+        if (response.status == 'success') {
+          $scope.profile_msg = 'Profile successfully updated';
+          activeUser = $scope.profileData;
+        } else {
+          $scope.profile_msg = 'Profile update failed. Please review all fields';
+        }
+      }, function () {
+        $scope.profile_msg = 'Profile could not be updated at this time. Please try again';
+      }
+    )
   };
 
 })
