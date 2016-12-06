@@ -15,23 +15,11 @@ module.exports = function(config) {
 
     // list of files / patterns to load in the browser
     files: [
-      'www/lib/ionic/js/angular/angular.js',
-      'www/lib/ionic/js/angular/angular-animate.js',
-      'www/lib/ionic/js/angular/angular-sanitize.js',
-      'www/lib/ionic/js/angular/angular-resource.js',
+      'www/lib/ionic/js/ionic.bundle.js',
       'www/lib/angular-mocks/angular-mocks.js',
-      'www/lib/angular-ui-router/release/angular-ui-router.js',
-      'www/lib/ionic/js/ionic.js',
-      'www/lib/ionic/js/ionic-angular.js',
-      //"http://js.pusher.com/3.2/pusher.js",
+      'www/lib/pusher/dist/pusher.js',
       'www/js/*.js',
-      //'www/lib/pusher-test-stub/dist/pusher-test-stub.js',
-      //'www/js/controllers/*.js',
-      //'www/js/services/*.js',
-      'www/js/services/users_service.js',
-      'www/js/services/invoices_service.js',
-      'www/js/services/booking_service.js',
-      'www/js/services/pusher_service.js',
+      'www/lib/pusher-test-stub/dist/pusher-test-stub.js',
       'test/spec/**/*.js'
     ],
 

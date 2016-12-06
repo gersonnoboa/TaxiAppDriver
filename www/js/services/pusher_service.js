@@ -11,15 +11,11 @@ app.service('PusherService', function ($rootScope) {
     cluster: 'eu',
     encrypted: true
   });
-  //var pusher = new Pusher(PUSHER_KEY);
   var channel = pusher.subscribe('bookings');
   return {
     onMessage: function (callback) {
       channel.bind('async_notification', function (data) {
         callback(data);
-        /*$rootScope.$apply(function () {
-          callback(data);
-        });*/
       });
     }
   };
