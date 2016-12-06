@@ -51,8 +51,8 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   $scope.showNewRequest = function() {
     //$scope.new_request_msg = '';
-    var channel = Pusher.instances[0].channel('bookings');
-    channel.emit('async_notification', {message: 'Ride From Kabaumaja to Raatuse', action: 'new_request', data: {id: 2}});
+    var channel = Pusher.instances[0].channel('ride');
+    channel.emit('driver', {message: 'Ride From Kabaumaja to Raatuse', action: 'new_request', data: {id: 2}});
     /*setTimeout(function () {
       channel.emit('async_notification', {message: 'Ride From Kabaumaja to Raatuse', action: 'cancel_request', data: {id: 2}});
     }, 20000);*/

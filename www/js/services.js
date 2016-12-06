@@ -16,7 +16,7 @@ angular.module('taxi_home_driver.services', ['ngResource'])
     });
   })
 
-  .service('PusherService', function ($rootScope) {
+  .service('PusherService', function () {
     Pusher.logToConsole = true;
 
     var pusher = new Pusher(PUSHER_KEY, {
@@ -24,10 +24,10 @@ angular.module('taxi_home_driver.services', ['ngResource'])
       encrypted: true
     });
     //var pusher = new Pusher(PUSHER_KEY);
-    var channel = pusher.subscribe('bookings');
+    var channel = pusher.subscribe('ride');
     return {
       onMessage: function (callback) {
-        channel.bind('async_notification', function (data) {
+        channel.bind('driver', function (data) {
           callback(data);
         });
       }
