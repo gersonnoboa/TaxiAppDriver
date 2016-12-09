@@ -9,18 +9,21 @@
       </div>
     </div>
     <form ng-submit="changeStatus()">
-      <label class="item item-input">
-        <span class="input-label">Status</span>
-        <select ng-model="statusData.status">
-          <option value="active">Active</option>
-          <option value="inactive">Inactive</option>
-          <option value="busy">Busy</option>
-          <option value="invisible">Invisible</option>
-        </select>
-      </label>
-      <label class="item">
-        <button class="button button-block button-positive" type="submit">Set Status</button>
-      </label>
+      <div class="list">
+
+        <label class="item item-input item-select">
+          <div class="input-label">Status</div>
+          <select ng-model="statusData.status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="busy">Busy</option>
+            <option value="invisible">Invisible</option>
+          </select>
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Set Status</button>
+        </label>
+      </div>
     </form>
   </ion-content>
 </ion-view>
