@@ -55,12 +55,20 @@ angular.module('taxi_home_driver.services', ['ngResource'])
 
   .service('BookingService', function ($http) {
     return {
-      acceptBooking: function(data) {
+      accept: function(data) {
         return $http.post(ROOT_URI+'/bookings/accept', data);
       },
 
-      rejectBooking: function(data) {
+      reject: function(data) {
         return $http.post(ROOT_URI+'/bookings/reject', data);
+      },
+
+      startRide: function(data) {
+        return $http.post(ROOT_URI+'/bookings/start_ride', data);
+      },
+
+      endRide: function(data) {
+        return $http.post(ROOT_URI+'/bookings/end_ride', data);
       }
     };
   });
