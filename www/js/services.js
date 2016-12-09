@@ -4,7 +4,36 @@
 
 'use strict';
 
-angular.module('taxi_home_driver.services', ['ngResource'])
+angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
+
+  .service('Auth', function ($cookieStore) {
+    var _user = {};
+
+    return {
+      user : _user,
+      token : "",
+      setUser : function(aUser){
+        this.user = aUser;
+        this.token = aUser.attributes.token;
+        //$cookieStore.put('current.user', user);
+      },
+      remove: function () {
+        this.user = {};
+        this.token = "";
+        //$cookieStore.remove('current.user');
+      },
+      fetch: function () {
+        return this.user;
+        //$cookieStore.get('current.user');
+      },
+      isLoggedIn : function() {
+        if (!this.user.id) {
+          this.fetch();
+        }
+        return (!!this.user.id);
+      }
+    }
+  })
 
   .service('UsersService', function ($resource) {
 
@@ -16,7 +45,7 @@ angular.module('taxi_home_driver.services', ['ngResource'])
     });
   })
 
-  .service('PusherService', function () {
+  .service('PusherService', function (Auth) {
     Pusher.logToConsole = true;
 
     var pusher = new Pusher(PUSHER_KEY, {
@@ -27,7 +56,7 @@ angular.module('taxi_home_driver.services', ['ngResource'])
     var channel = pusher.subscribe('ride');
     return {
       onMessage: function (callback) {
-        channel.bind('driver', function (data) {
+        channel.bind('driver_'+Auth.user.id, function (data) {
           callback(data);
         });
       }
