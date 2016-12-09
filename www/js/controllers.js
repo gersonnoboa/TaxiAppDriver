@@ -1,6 +1,6 @@
 angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $location, PusherService, BookingService, UsersService) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $location, $ionicPopup, PusherService, BookingService, UsersService, Auth) {
 
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -10,7 +10,6 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   //});
 
   // Form data for the login modal
-  $scope.loginData = {};
   $scope.new_request_msg = "";
   $scope.new_request_data = {};
   $scope.current_request = {};
@@ -19,21 +18,23 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.status_msg = "";
   $scope.profileData = {};
 
-  PusherService.onMessage(function(response) {
-    //$scope.asyncNotification = response.message;
-    if (!!response.action) {
-      if (response.action == 'new_request') {
-        $scope.new_request_msg = response.message;
-        $scope.new_request_data = response.data;
-        $scope.modal.show();
-      } else if (response.action == 'cancel_request') {
-        $scope.new_request_msg = '';
-        $scope.new_request_data = {};
-        $scope.modal.hide();
+  $scope.startPusher = function() {
+    PusherService.onMessage(function(response) {
+      //$scope.asyncNotification = response.message;
+      if (!!response.action) {
+        if (response.action == 'new_request') {
+          $scope.new_request_msg = "You have a new pickup request";
+          $scope.new_request_data = response.data;
+          $scope.modal.show();
+        } else if (response.action == 'cancel_request') {
+          $scope.new_request_msg = '';
+          $scope.new_request_data = {};
+          $scope.modal.hide();
+        }
       }
-    }
+    });
+  };
 
-  });
 
   // Create the modal that we will use later
   $ionicModal.fromTemplateUrl('templates/new_request.html', {
@@ -52,7 +53,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.showNewRequest = function() {
     //$scope.new_request_msg = '';
     var channel = Pusher.instances[0].channel('ride');
-    channel.emit('driver', {message: 'Ride From Kabaumaja to Raatuse', action: 'new_request', data: {id: 2}});
+    channel.emit('driver', {action: 'new_request', data: {id: 2, start_location: 'Raatuse 22', destination: 'J.Liivi 2'}});
     /*setTimeout(function () {
       channel.emit('async_notification', {message: 'Ride From Kabaumaja to Raatuse', action: 'cancel_request', data: {id: 2}});
     }, 20000);*/
@@ -61,15 +62,14 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   // Open the login modal
   $scope.logout = function() {
     //$location.path('/login');
-    UsersService.logout({user: {token: USER_TOKEN}}, function (data) {
+    UsersService.logout({user: {token: Auth.token}}, function (data) {
       // Check the response
       if (!data.error) {
         // successful registration
-        USER_TOKEN = "";
-        activeUser = {};
+        Auth.remove();
+        $scope.login_msg = "";
         //$location.path('/login');
         $state.go('login');
-        $scope.login_msg = "";
       } else {
         // Error message here
         console.log('response data:', data);
@@ -82,7 +82,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   $scope.acceptRequest = function() {
     // show loader
-    BookingService.accept({request_id: $scope.new_request_data.id, user_token: USER_TOKEN})
+    BookingService.accept({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
       .success(function(response) {
         //console.log('Accept response', response);
         if (response.status == 'success') {
@@ -111,7 +111,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   $scope.rejectRequest = function() {
     //console.log('I will now reject');
-    BookingService.reject({booking: {id: $scope.new_request_data.id}, user: {token: USER_TOKEN}})
+    BookingService.reject({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
       .success(function(response) {
         //console.log('Accept response', response);
         $scope.current_request = {};
@@ -131,7 +131,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   };
 
   $scope.changeStatus = function() {
-    UsersService.setStatus({token: USER_TOKEN, status: $scope.statusData.status},
+    UsersService.setStatus({token: Auth.token, status: $scope.statusData.status},
       function(response) {
         //console.log('Status change data', response);
         // on success
@@ -159,7 +159,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   };
 
   $scope.updateProfile = function() {
-    UsersService.update({token: USER_TOKEN, user: $scope.profileData},
+    UsersService.update({token: Auth.token, user: $scope.profileData},
       function(response) {
         if (response.status == 'success') {
           //$scope.profile_msg = '';
@@ -183,7 +183,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
 })
 
-.controller('RegisterCtrl', function ($scope, $timeout, $location, UsersService, $state) {
+.controller('RegisterCtrl', function ($scope, $timeout, $location, $ionicPopup, $state, UsersService) {
   // Simulate registration with this controller
 
   $scope.registerData = {};
@@ -212,10 +212,8 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   }
 })
 
-.controller('LoginCtrl', function ($scope, $timeout, $location) {
+.controller('LoginCtrl', function ($scope, $timeout, $location, $state, $ionicPopup, UsersService, Auth) {
   $scope.loginData = {};
-  $scope.loginStatus = '';
-  $scope.user_token = '';
   $scope.login_msg = "";
 
   // Perform the login action when the user submits the login form
@@ -230,16 +228,16 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
       // Check the response
       if (!data.error) {
         // successful login
-        USER_TOKEN = data.data.attributes.token;
-        activeUser = data.data;
+        Auth.setUser(data.data);
         //$location.path('/app/dashboard');
+        $scope.startPusher();
         $state.go('app.dashboard');
         $scope.login_msg = "";
       } else {
         // Error message here
         //console.log('response data:',data);
         $ionicPopup.alert({
-          title: 'Registration Error', template: 'Incorrect username/password'
+          title: 'Login Error', template: 'Incorrect username/password'
         });
       }
     });
