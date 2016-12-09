@@ -60,12 +60,29 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   // Open the login modal
   $scope.logout = function() {
-    $location.path('/login');
+    //$location.path('/login');
+    UsersService.logout({user: {token: USER_TOKEN}}, function (data) {
+      // Check the response
+      if (!data.error) {
+        // successful registration
+        USER_TOKEN = "";
+        activeUser = {};
+        //$location.path('/login');
+        $state.go('login');
+        $scope.login_msg = "";
+      } else {
+        // Error message here
+        console.log('response data:', data);
+        $ionicPopup.alert({
+          title: 'Logout Error', template: 'Unable to logout at this time'
+        });
+      }
+    });
   };
 
   $scope.acceptRequest = function() {
     // show loader
-    BookingService.acceptBooking({request_id: $scope.new_request_data.id, user_token: USER_TOKEN})
+    BookingService.accept({request_id: $scope.new_request_data.id, user_token: USER_TOKEN})
       .success(function(response) {
         //console.log('Accept response', response);
         if (response.status == 'success') {
@@ -75,31 +92,41 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
           $scope.modal.hide();
           $scope.display_msg = "";
           $scope.statusData.status = 'busy';
+          // Carry out post actions here
         } else {
           // Sad face path
-          $scope.display_msg = "Request could not be accepted at this time";
+          $ionicPopup.alert({
+            title: 'Booking Update Failed', template: 'Booking could not be accepted at this time'
+          });
         }
       })
       .error(function() {
         // error here
         $scope.display_msg = "Request could not be accepted at this time";
+        $ionicPopup.alert({
+          title: 'Booking Update Successful', template: 'Booking request has been rejected'
+        });
       });
   };
 
   $scope.rejectRequest = function() {
     //console.log('I will now reject');
-    BookingService.rejectBooking({request_id: $scope.new_request_data.id, user_token: USER_TOKEN})
+    BookingService.reject({booking: {id: $scope.new_request_data.id}, user: {token: USER_TOKEN}})
       .success(function(response) {
         //console.log('Accept response', response);
         $scope.current_request = {};
         $scope.new_request_data = {};
         $scope.modal.hide();
         $scope.display_msg = "";
-        alert("request rejected");
+        $ionicPopup.alert({
+          title: 'Booking Update Successful', template: 'Booking request has been rejected'
+        });
       })
       .error(function() {
         // error here
-        $scope.display_msg = "Request could not be rejected at this time";
+        $ionicPopup.alert({
+          title: 'Booking Update Failed', template: 'Request could not be rejected at this time'
+        });
       });
   };
 
@@ -109,16 +136,22 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
         //console.log('Status change data', response);
         // on success
         if (response.status == 'success') {
-          $scope.status_msg = "status successfully set";
+          $ionicPopup.alert({
+            title: 'Status Update Successful', template: 'status successfully set'
+          });
           // Triggers to test workflow of active status
         } else {
           // Sad face path
-          $scope.status_msg = "Setting new status failed";
+          $ionicPopup.alert({
+            title: 'Status Update Failed', template: 'Setting new status failed'
+          });
         }
       }, function() {
         // on error
-        $scope.status_msg = "Status could not be set at this time";
         $scope.statusData.status = "";
+        $ionicPopup.alert({
+          title: 'Status Update Failed', template: 'Status could not be set at this time'
+        });
     });
     setTimeout(function () {
       $scope.status_msg = "";
@@ -129,20 +162,28 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
     UsersService.update({token: USER_TOKEN, user: $scope.profileData},
       function(response) {
         if (response.status == 'success') {
-          $scope.profile_msg = 'Profile successfully updated';
+          //$scope.profile_msg = '';
           activeUser = $scope.profileData;
+          $ionicPopup.alert({
+            title: 'Update Successful', template: 'Profile successfully updated'
+          });
         } else {
-          $scope.profile_msg = 'Profile update failed. Please review all fields';
+          $ionicPopup.alert({
+            title: 'Update Failed', template: 'Profile update failed. Please review all fields'
+          });
         }
       }, function () {
-        $scope.profile_msg = 'Profile could not be updated at this time. Please try again';
+        //console.log('Response data:',data);
+        $ionicPopup.alert({
+          title: 'Update Failed', template: 'Profile could not be updated at this time. Please try again'
+        });
       }
     )
   };
 
 })
 
-.controller('RegisterCtrl', function ($scope, $timeout, $location, UsersService) {
+.controller('RegisterCtrl', function ($scope, $timeout, $location, UsersService, $state) {
   // Simulate registration with this controller
 
   $scope.registerData = {};
@@ -150,21 +191,24 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   $scope.doRegister = function () {
 
-    $timeout(function() {
+    /*$timeout(function() {
       $location.path('/login');
-    }, 1000);
+    }, 1000);*/
     // Registration would be done here
-    /*UsersService.save($scope.registerData, function (data) {
+    UsersService.save($scope.registerData, function (data) {
       // Check the response
-      if (data != "error") {
+      if (!data.error) {
         // successful registration
-        $location.path('/login');
-        $scope.status_msg = "";
+        //$location.path('/login');
+        $state.go('login');
       } else {
         // Error message here
-        $scope.status_msg = "Registration failed";
+        //console.log('Response data:',data);
+        $ionicPopup.alert({
+          title: 'Registration Error', template: 'Registration failed'
+        });
       }
-    });*/
+    });
   }
 })
 
@@ -179,20 +223,26 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
     // Simulate a login delay. Remove this and replace with your login
     // code if using a login system
-    $timeout(function() {
+    /*$timeout(function() {
       $location.path('/app/dashboard');
-    }, 1000);
-    /*UsersService.save($scope.loginData, function (data) {
+    }, 1000);*/
+    UsersService.login({user: $scope.loginData}, function (data) {
       // Check the response
-      if (data != "error") {
-        // successful registration
-        $location.path('/app/dashboard');
+      if (!data.error) {
+        // successful login
+        USER_TOKEN = data.data.attributes.token;
+        activeUser = data.data;
+        //$location.path('/app/dashboard');
+        $state.go('app.dashboard');
         $scope.login_msg = "";
       } else {
         // Error message here
-        $scope.login_msg = "Incorrect username/password";
+        //console.log('response data:',data);
+        $ionicPopup.alert({
+          title: 'Registration Error', template: 'Incorrect username/password'
+        });
       }
-    });*/
+    });
   };
 
   // Open the login modal
