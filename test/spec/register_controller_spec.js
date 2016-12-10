@@ -25,7 +25,7 @@ describe('Registration Test Suite', function () {
     $httpBackend.verifyNoOutstandingRequest();
   });
 
-  it('should bind to the field data', function () {
+  xit('should bind to the field data', function () {
     expect(scope.registerData).toBeDefined();
     expect(scope.doRegister).toBeDefined();
 

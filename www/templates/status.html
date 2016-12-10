@@ -1,5 +1,29 @@
 <ion-view view-title="Status">
   <ion-content>
-    <h1>Status Page</h1>
+    <h1>My Status</h1>
+    <br>
+    <div class="jasmine-errored">{{status_msg}}</div>
+    <div class="card">
+      <div class="item item-text-wrap">
+        Set your status here
+      </div>
+    </div>
+    <form ng-submit="changeStatus()">
+      <div class="list">
+
+        <label class="item item-input item-select">
+          <div class="input-label">Status</div>
+          <select ng-model="statusData.status">
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="busy">Busy</option>
+            <option value="invisible">Invisible</option>
+          </select>
+        </label>
+        <label class="item">
+          <button class="button button-block button-positive" type="submit">Set Status</button>
+        </label>
+      </div>
+    </form>
   </ion-content>
 </ion-view>

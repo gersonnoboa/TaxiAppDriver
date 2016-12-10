@@ -9,19 +9,21 @@ describe('Login Test Suite', function () {
   var loginCtrl, scope, $httpBackend = {};
 
   beforeEach(module('taxi_home_driver'));
+  beforeEach(module('taxi_home_driver.controllers'));
+  beforeEach(module('taxi_home_driver.services'));
 
-  beforeEach(inject(function ($controller, $rootScope, _$httpBackend_) {
+  beforeEach(inject(function ($rootScope, $controller, _$httpBackend_) {
     scope = $rootScope.$new();
     $httpBackend = _$httpBackend_;
-    loginCtrl = $controller('loginCtrl', {$scope: scope});
+    loginCtrl = $controller('LoginCtrl', {$scope: scope});
   }));
 
-  afterEach(function () {
+  /*afterEach(function () {
     $httpBackend.verifyNoOutstandingExpectation();
     $httpBackend.verifyNoOutstandingRequest();
-  });
+  });*/
 
-  xit('should have needed data defined', function() {
+  it('should have needed data defined', function() {
       expect(scope.loginData).toBeDefined();
       expect(scope.doLogin).toBeDefined();
   });

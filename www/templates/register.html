@@ -6,7 +6,7 @@
     <form ng-submit="doRegister()">
       <div class="list">
         <h3>{{status_msg}}</h3>
-        <input type="hidden" ng-model="registerData.user_type" value="Driver">
+        <input type="hidden" ng-model="registerData.user_type" value="driver">
         <label class="item item-input">
           <span class="input-label">First Name</span>
           <input type="text" ng-model="registerData.first_name">
@@ -33,7 +33,7 @@
         </label>
         <label class="item item-input">
           <span class="input-label">Email Address</span>
-          <input type="text" ng-model="registerData.email_address">
+          <input type="text" ng-model="registerData.email">
         </label>
         <label class="item item-input">
           <span class="input-label">Password</span>
@@ -45,6 +45,9 @@
         </label>
         <label class="item">
           <button class="button button-block button-positive" type="submit">Register</button>
+        </label>
+        <label class="item">
+          <button class="button button-block button-energized" type="button" ng-click="showLogin()">Login</button>
         </label>
       </div>
     </form>

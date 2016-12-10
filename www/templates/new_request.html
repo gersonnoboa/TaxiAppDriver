@@ -1,12 +1,17 @@
-<ion-modal-view on-double-tap="closeModal()">
-  <ion-header-bar class="bar-stable">
-    <div class="buttons">
-      <button class="button button-stable button-clear " ng-click="closeModal()">Close</button>
-    </div>
-  </ion-header-bar>
+<ion-modal-view view-title="New Taxi Request">
   <ion-content padding="true" scroll="false" class="has-header">
-    <ion-list>
-      <ion-item>{{sync_notification}}</ion-item>
-    </ion-list>
+    <form>
+      <h3>New Taxi Request</h3>
+      <br>
+      <div class="jasmine-errored">{{display_msg}}</div>
+      <div class="card">
+        <div class="item item-text-wrap">
+          {{new_request_msg}}
+        </div>
+      </div>
+      <button class="button button-block button-positive" type="button" ng-click="acceptRequest()">Accept</button>
+      <br>
+      <button class="button button-block button-dark" type="button" ng-click="rejectRequest()">Reject</button>
+    </form>
   </ion-content>
 </ion-modal-view>
