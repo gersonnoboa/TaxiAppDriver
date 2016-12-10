@@ -93,5 +93,5 @@ angular.module('taxi_home_driver', ['ionic', 'taxi_home_driver.controllers', 'ta
     }
   });
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/register');
+  $urlRouterProvider.otherwise('/login');
 });
