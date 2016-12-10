@@ -11,3 +11,5 @@ var PUSHER_KEY = 'e8bca01fb79c7e5af913';
 var activeUser = {};
 
 var pusher_started = false;
+
+var NO_AUTH_URIS = ['/login','/register'];
