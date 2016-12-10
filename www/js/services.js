@@ -14,8 +14,8 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
       token : "",
       setUser : function(aUser){
         this.user = aUser;
-        this.token = aUser.attributes.token;
-        $cookieStore.put('current.user', user);
+        this.token = this.user.attributes.token;
+        $cookieStore.put('current.user', this.user);
       },
       remove: function () {
         this.user = {};
@@ -24,13 +24,23 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
       },
       fetch: function () {
         //return this.user;
-        return $cookieStore.get('current.user');
+        try {
+          this.user = $cookieStore.get('current.user');
+          this.token = this.user.attributes.token;
+        } catch (e) {
+          this.user = {};
+          this.token = "";
+        }
       },
       isLoggedIn : function() {
-        if (!this.user.id) {
-          this.fetch();
+        try {
+          if (!this.user.id) {
+            this.fetch();
+          }
+          return (!!this.user.id);
+        } catch (e) {
+          return false;
         }
-        return (!!this.user.id);
       }
     }
   })
@@ -56,8 +66,9 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
     var channel = pusher.subscribe('ride');
     return {
       onMessage: function (callback) {
-        console.log('subscribed_channel: ',Auth.user);
-        channel.bind('driver_'+Auth.user.id, function (data) {
+        var chan = 'driver_'+Auth.user.id;
+        //console.log('subscribed_channel: '+chan,Auth.user);
+        channel.bind(chan, function (data) {
           callback(data);
         });
       }
