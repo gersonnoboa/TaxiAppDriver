@@ -19,20 +19,23 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.profileData = {};
 
   $scope.startPusher = function() {
-    PusherService.onMessage(function(response) {
-      //$scope.asyncNotification = response.message;
-      if (!!response.action) {
-        if (response.action == 'new_request') {
-          $scope.new_request_msg = "You have a new pickup request";
-          $scope.new_request_data = response.data;
-          $scope.modal.show();
-        } else if (response.action == 'cancel_request') {
-          $scope.new_request_msg = '';
-          $scope.new_request_data = {};
-          $scope.modal.hide();
+    if (!pusher_started) {
+      PusherService.onMessage(function(response) {
+        //$scope.asyncNotification = response.message;
+        if (!!response.action) {
+          if (response.action == 'new_request') {
+            $scope.new_request_msg = "You have a new pickup request";
+            $scope.new_request_data = response.data;
+            $scope.modal.show();
+          } else if (response.action == 'cancel_request') {
+            $scope.new_request_msg = '';
+            $scope.new_request_data = {};
+            $scope.modal.hide();
+          }
         }
-      }
-    });
+      });
+      pusher_started = true;
+    }
   };
 
 
@@ -53,7 +56,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.showNewRequest = function() {
     //$scope.new_request_msg = '';
     var channel = Pusher.instances[0].channel('ride');
-    channel.emit('driver', {action: 'new_request', data: {id: 2, start_location: 'Raatuse 22', destination: 'J.Liivi 2'}});
+    channel.emit('driver_6', {action: 'new_request', data: {id: 2, start_location: 'Raatuse 22', destination: 'J.Liivi 2'}});
     /*setTimeout(function () {
       channel.emit('async_notification', {message: 'Ride From Kabaumaja to Raatuse', action: 'cancel_request', data: {id: 2}});
     }, 20000);*/
@@ -68,6 +71,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
         // successful registration
         Auth.remove();
         $scope.login_msg = "";
+        pusher_started = false;
         //$location.path('/login');
         $state.go('login');
       } else {
@@ -181,6 +185,8 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
     )
   };
 
+  $scope.startPusher();
+
 })
 
 .controller('RegisterCtrl', function ($scope, $timeout, $location, $ionicPopup, $state, UsersService) {
@@ -188,6 +194,12 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   $scope.registerData = {};
   $scope.status_msg = "";
+
+  // Open the login modal
+  $scope.showLogin = function() {
+    //$location.path('/register');
+    $state.go('login');
+  };
 
   $scope.doRegister = function () {
 
@@ -204,15 +216,16 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
       } else {
         // Error message here
         //console.log('Response data:',data);
-        $ionicPopup.alert({
-          title: 'Registration Error', template: 'Registration failed'
-        });
+        ToastService.show('Registration failed', 'short', 'Registration Error');
       }
+    }, function () {
+      //console.log('Response data:',data);
+      ToastService.show('Error connecting to server to complete registration', 'short', 'Connection Error');
     });
   }
 })
 
-.controller('LoginCtrl', function ($scope, $timeout, $location, $state, $ionicPopup, UsersService, Auth) {
+.controller('LoginCtrl', function ($scope, $timeout, $location, $state, $ionicPopup, UsersService, Auth, ToastService) {
   $scope.loginData = {};
   $scope.login_msg = "";
 
@@ -227,25 +240,35 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
     UsersService.login({user: $scope.loginData}, function (data) {
       // Check the response
       if (!data.error) {
+        console.log('response data:',data);
         // successful login
         Auth.setUser(data.data);
         //$location.path('/app/dashboard');
-        $scope.startPusher();
         $state.go('app.dashboard');
         $scope.login_msg = "";
       } else {
         // Error message here
         //console.log('response data:',data);
-        $ionicPopup.alert({
-          title: 'Login Error', template: 'Incorrect username/password'
-        });
+        ToastService.show('Incorrect username/password', 'short', 'Login Error');
       }
+    }, function (data) {
+      console.log('Response data:',data);
+      if (data.status > 1) {
+        // Server response
+        var msg = !!data.data.error ? data.data.error : 'Error while trying to login';
+        ToastService.show(msg, 'long', 'Login Error');
+      } else {
+        // Connection error
+        ToastService.show('Error connecting to server to login', 'long', 'Connection Error');
+      }
+
     });
   };
 
-  // Open the login modal
+  // Show the login view
   $scope.showRegister = function() {
-    $location.path('/register');
+    //$location.path('/register');
+    $state.go('register');
   };
 })
 
