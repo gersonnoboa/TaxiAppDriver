@@ -15,16 +15,16 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
       setUser : function(aUser){
         this.user = aUser;
         this.token = aUser.attributes.token;
-        //$cookieStore.put('current.user', user);
+        $cookieStore.put('current.user', user);
       },
       remove: function () {
         this.user = {};
         this.token = "";
-        //$cookieStore.remove('current.user');
+        $cookieStore.remove('current.user');
       },
       fetch: function () {
-        return this.user;
-        //$cookieStore.get('current.user');
+        //return this.user;
+        return $cookieStore.get('current.user');
       },
       isLoggedIn : function() {
         if (!this.user.id) {
@@ -56,6 +56,7 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
     var channel = pusher.subscribe('ride');
     return {
       onMessage: function (callback) {
+        console.log('subscribed_channel: ',Auth.user);
         channel.bind('driver_'+Auth.user.id, function (data) {
           callback(data);
         });
@@ -100,4 +101,36 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
         return $http.post(ROOT_URI+'/bookings/end_ride', data);
       }
     };
-  });
+  })
+  // Thanks to this gist: https://gist.github.com/rajatrocks/4434301a2db198947a60
+  // This is an 'Toast' to abstract notification for both desktop and mobile
+  // A toast notification appears for mobile while a popup appears for desktop
+  .service('ToastService', function($rootScope, $timeout, $ionicPopup, $ionicLoading/*, $cordovaToast*/) {
+    return {
+      show: function (message, duration, title, position) {
+        message = message || "There was a problem...";
+        duration = duration || 'short';
+        position = position || 'top';
+
+        if (!!window.cordova) {
+          // Use the Cordova Toast plugin
+          //$cordovaToast.show(message, duration, position);
+          window.plugins.toast.show(message, duration, position);
+        }
+        else {
+          var delay = duration == 'short' ? 2000 : 5000;
+
+          var myPopup = $ionicPopup.alert({
+            title: title, template: message
+          });
+
+          $timeout(function() {
+            myPopup.close();
+          }, delay);
+        }
+      }
+    };
+  })
+
+
+;
