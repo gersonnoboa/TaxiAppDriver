@@ -208,9 +208,10 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   };
 
   $scope.doRegister = function () {
+    $scope.registerData.user_type = 'driver';
 
     // Registration would be done here
-    UsersService.save($scope.registerData, function (data) {
+    UsersService.save({user: $scope.registerData}, function (data) {
       // Check the response
       if (!data.error) {
         // successful registration
