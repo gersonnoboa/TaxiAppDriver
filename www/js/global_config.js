@@ -14,3 +14,7 @@ var activeUser = {};
 var PUSHER_STATED = false;
 
 var NO_AUTH_URIS = ['/login','/register'];
+
+var LOCATION_TIMEOUT = 0;
+
+var DEFAULT_TIMEOUT = 15000;

@@ -1,10 +1,39 @@
 angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, $state, $location, $ionicPopup, PusherService, BookingService, UsersService, Auth, ToastService) {
+.controller('AppCtrl', function($scope, $ionicModal, $timeout, $state, $location, $ionicPopup, PusherService, BookingService, UsersService, Auth, ToastService, Framework) {
 
   /*$scope.$on('$locationChangeStart', function(event, toUrl, fromUrl) {
     console.log('inside location change: ',toUrl);
   });*/
+
+  $scope.updateLocation = function () {
+    Framework.navigator().then(function (navigator) {
+      navigator.geolocation.getCurrentPosition(function(position) {
+        var lat = position.coords.latitude;
+        var long = position.coords.longitude;
+
+        UsersService.setLocation({user: {token: Auth.token}, driver: {current_location_lat: lat, current_location_long: long}},
+          function (data) {
+          // Check the response
+          if (!data.error) {
+            // Successfully set location
+            console.log('Location successfully set:', data);
+          } else {
+            // Error message here
+            console.log('response data:', data);
+            // I doubt you wont be able to logout at this point
+          }
+          if (LOCATION_TIMEOUT > 0) {
+            setTimeout(function () {$scope.updateLocation();}, LOCATION_TIMEOUT);
+          }
+        }, function (err) {
+            console.log('unable to set location:',err);
+          });
+      });
+    }, function(err) {
+      console.log('position data could not be read: ',err);
+    });
+  };
 
   $scope.$on('$stateChangeStart', function (event, urlObj) {
     if (NO_AUTH_URIS.indexOf(urlObj.url) < 0 && !Auth.isLoggedIn()) {
@@ -173,6 +202,12 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
         // on success
         if (response.status == 'success') {
           ToastService.show('New status successfully set', 'long', 'Update Successful');
+          if ($scope.statusData.status == 'active') {
+            LOCATION_TIMEOUT = DEFAULT_TIMEOUT;
+            $scope.updateLocation();
+          } else {
+            LOCATION_TIMEOUT = 0;
+          }
           // Triggers to test workflow of active status
         } else {
           var msg = !!response.error ? response.error :  'Setting new status failed';
@@ -256,6 +291,9 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   Auth.fetch();
   $scope.profileData = Auth.user;
   $scope.startPusher();
+  if (LOCATION_TIMEOUT > 0) {
+    setTimeout(function () {$scope.updateLocation();}, LOCATION_TIMEOUT);
+  }
 
 })
 

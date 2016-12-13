@@ -21,6 +21,25 @@ angular.module('taxi_home_driver', ['ionic', 'taxi_home_driver.controllers', 'ta
     }
   });
 })
+.factory('Framework', function ($q) {
+  var _navigator = $q.defer();
+  var _cordova = $q.defer();
+
+  if (window.cordova === undefined) {
+    _navigator.resolve(window.navigator);
+    _cordova.resolve(false);
+  } else {
+    document.addEventListener('deviceready', function (evt) {
+      _navigator.resolve(navigator);
+      _cordova.resolve(true);
+    });
+  }
+
+  return {
+    navigator: function() { return _navigator.promise; },
+    cordova: function() { return _cordova.promise; }
+  };
+})
 
 .config(function($stateProvider, $urlRouterProvider) {
   $stateProvider

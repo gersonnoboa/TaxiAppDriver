@@ -51,7 +51,8 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
       login: {method:'POST', url: ROOT_URI+'/drivers/login'},
       logout: {method:'POST', url: ROOT_URI+'/drivers/logout'},
       setStatus: {method: 'POST', url: ROOT_URI+'/drivers/status'},
-      update: {method: 'PUT', url: ROOT_URI+'/drivers/'}
+      update: {method: 'PUT', url: ROOT_URI+'/drivers/'},
+      setLocation: {method: 'POST', url: ROOT_URI+'/drivers/set_location'}
     });
   })
 
