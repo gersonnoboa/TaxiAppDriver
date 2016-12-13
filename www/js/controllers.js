@@ -167,7 +167,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   };
 
   $scope.changeStatus = function() {
-    UsersService.setStatus({token: Auth.token, status: $scope.statusData.status},
+    UsersService.setStatus({user: {token: Auth.token}, driver: {status: $scope.statusData.status}},
       function(response) {
         //console.log('Status change data', response);
         // on success
@@ -175,10 +175,8 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
           ToastService.show('New status successfully set', 'long', 'Update Successful');
           // Triggers to test workflow of active status
         } else {
-          // Sad face path
-          $ionicPopup.alert({
-            title: 'Status Update Failed', template: 'Setting new status failed'
-          });
+          var msg = !!response.error ? response.error :  'Setting new status failed';
+          ToastService.show(msg, 'long', 'Status Update Failed');
         }
       }, function(data) {
         if (data.status > 1) {

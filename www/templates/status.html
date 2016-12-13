@@ -2,10 +2,9 @@
   <ion-content>
     <h1>My Status</h1>
     <br>
-    <div class="jasmine-errored">{{status_msg}}</div>
     <div class="card">
       <div class="item item-text-wrap">
-        Set your status here
+        Change your status
       </div>
     </div>
     <form ng-submit="changeStatus()">
@@ -13,11 +12,11 @@
 
         <label class="item item-input item-select">
           <div class="input-label">Status</div>
-          <select ng-model="statusData.status">
-            <option value="active">Active</option>
-            <option value="inactive">Inactive</option>
-            <option value="busy">Busy</option>
-            <option value="invisible">Invisible</option>
+          <select ng-model="profileData.driver.status">
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+            <option value="Busy">Busy</option>
+            <option value="Transit">Transit</option>
           </select>
         </label>
         <label class="item">
