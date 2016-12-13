@@ -72,6 +72,15 @@ angular.module('taxi_home_driver', ['ionic', 'taxi_home_driver.controllers', 'ta
       }
     }
   })
+  .state('app.booking', {
+    url: '/booking/:id',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/booking.html',
+        controller: 'BookingCtrl'
+      }
+    }
+  })
 
   .state('app.profile', {
     url: '/profile',

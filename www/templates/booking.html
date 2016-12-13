@@ -1,0 +1,45 @@
+<ion-view view-title="Booking Details">
+  <br>
+  <div class="card">
+    <div class="item item-divider bar bar-header bar-calm">
+      Current Booking
+    </div>
+    <div class="item item-text-wrap">
+      <div class="item item-input">
+        <span class="input-label">Client Name</span>
+        <span class="capitalize">{{booking.customer_first_name}} {{booking.customer_last_name}}</span>
+      </div>
+      <div class="item item-input">
+        <span class="input-label">Phone Number</span>
+        <span>{{booking.customer_phone_number}}</span>
+      </div>
+      <div class="item item-input">
+        <span class="input-label">Pickup Location</span>
+        <span class="capitalize">{{booking.start_location}}</span>
+      </div>
+      <div class="item item-input">
+        <span class="input-label">Drop-Off Location</span>
+        <span class="capitalize">{{booking.destination}}</span>
+      </div>
+      <div class="item item-input">
+        <span class="input-label">Status</span>
+        <span class="capitalize">{{booking.ride_status}}</span>
+      </div>
+      <div class="item item-input">
+        <button class="button button-block button-positive" type="button" ng-if="current_request.ride_status == 'new'" ng-click="acceptRequest()">
+          Accept
+        </button>
+        <button class="button button-block button-assertive" type="button" ng-if="current_request.ride_status == 'new'" ng-click="rejectRequest()">
+          Reject
+        </button>
+        <button class="button button-block button-balanced" type="button" ng-if="booking.ride_status == 'accepted'" ng-click="startTrip()">
+          Start Ride
+        </button>
+        <button class="button button-block button-energized" type="button" ng-if="booking.ride_status == 'started'" ng-click="endTrip()">
+          End Ride
+        </button>
+      </div>
+
+    </div>
+  </div>
+</ion-view>

@@ -14,7 +14,7 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
       token : "",
       setUser : function(aUser){
         this.user = aUser;
-        this.token = this.user.attributes.token;
+        this.token = this.user.user.token;
         $cookieStore.put('current.user', this.user);
       },
       remove: function () {
@@ -26,7 +26,7 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
         //return this.user;
         try {
           this.user = $cookieStore.get('current.user');
-          this.token = this.user.attributes.token;
+          this.token = this.user.user.token;
         } catch (e) {
           this.user = {};
           this.token = "";
@@ -34,10 +34,10 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
       },
       isLoggedIn : function() {
         try {
-          if (!this.user.id) {
+          if (!this.user.user.id) {
             this.fetch();
           }
-          return (!!this.user.id);
+          return (!!this.user.user.id);
         } catch (e) {
           return false;
         }
@@ -48,10 +48,10 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
   .service('UsersService', function ($resource) {
 
     return $resource(ROOT_URI+'/users', {}, {
-      login: {method:'POST', url: ROOT_URI+'/users/login'},
-      logout: {method:'POST', url: ROOT_URI+'/users/logout'},
-      setStatus: {method: 'POST', url: ROOT_URI+'/users/status'},
-      update: {method: 'PUT', url: ROOT_URI+'/users/'}
+      login: {method:'POST', url: ROOT_URI+'/drivers/login'},
+      logout: {method:'POST', url: ROOT_URI+'/drivers/logout'},
+      setStatus: {method: 'POST', url: ROOT_URI+'/drivers/status'},
+      update: {method: 'PUT', url: ROOT_URI+'/drivers/'}
     });
   })
 
@@ -95,6 +95,7 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
   })
 
   .service('BookingService', function ($http) {
+    var bookingsList = {};
     return {
       accept: function(data) {
         return $http.post(ROOT_URI+'/bookings/accept', data);
@@ -110,6 +111,25 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
 
       endRide: function(data) {
         return $http.post(ROOT_URI+'/bookings/end_ride', data);
+      },
+
+      history: function(data) {
+        return $http.get(ROOT_URI+'/bookings/history', data);
+      },
+
+      addToList: function (booking) {
+        bookingsList[booking.id] = booking;
+      },
+
+      all: function () {
+        return bookingsList;
+      },
+
+      findInList: function (booking_id) {
+        if (!bookingsList[booking_id]) {
+          return false;
+        }
+        return bookingsList[booking_id];
       }
     };
   })

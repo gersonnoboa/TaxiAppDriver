@@ -24,6 +24,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.new_request_msg = "";
   $scope.new_request_data = {};
   $scope.current_request = {};
+  $scope.request_history = {};
   $scope.display_msg = "";
   $scope.statusData = {status: 'inactive'};
   $scope.status_msg = "";
@@ -34,9 +35,11 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
       PusherService.onMessage(function(response) {
         //$scope.asyncNotification = response.message;
         if (!!response.action) {
-          if (response.action == 'new_request') {
+          if (response.action == 'new_booking') {
             $scope.new_request_msg = "You have a new pickup request";
-            $scope.new_request_data = response.data;
+            $scope.new_request_data = response.booking;
+            $scope.new_request_data.ride_status = 'new';
+            BookingService.addToList($scope.new_request_data);
             $scope.modal.show();
           } else if (response.action == 'cancel_request') {
             $scope.new_request_msg = '';
@@ -67,7 +70,12 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.showNewRequest = function() {
     //$scope.new_request_msg = '';
     var channel = Pusher.instances[0].channel('ride');
-    channel.emit('driver_6', {action: 'new_request', data: {id: 6, start_location: 'Raatuse 22', destination: 'J.Liivi 2'}});
+    channel.emit('driver_'+Auth.user.id,
+      {action: 'new_booking', booking: {id: 6, start_location: 'Raatuse 22', destination: 'J.Liivi 2',
+        customer_first_name: 'Victor', customer_last_name: 'Aluko', customer_phone_number: '555555'}
+      }
+
+    );
     /*setTimeout(function () {
       channel.emit('async_notification', {message: 'Ride From Kabaumaja to Raatuse', action: 'cancel_request', data: {id: 2}});
     }, 20000);*/
@@ -93,7 +101,15 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   $scope.acceptRequest = function() {
     // show loader
-    BookingService.accept({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
+
+    $scope.current_request = $scope.new_request_data;
+    $scope.statusData.status = 'busy';
+    $scope.current_request.ride_status = 'accepted';
+    $scope.new_request_data = {};
+    $scope.modal.hide();
+    BookingService.addToList($scope.current_request);
+    //ToastService.show('Booking request has been accepted', 'long', 'Booking Accepted');
+    /*BookingService.accept({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
       .success(function(response) {
         //console.log('Accept response', response);
         if (response.status == 'success') {
@@ -113,18 +129,25 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
         }
       })
       .error(function(err) {
-        if (err.status > 1) {
-          var msg = !!err.data.error ? err.data.error : 'Request could not be accepted at this time';
+        try {
+          var msg = !!err.error ? err.error : err.data.error;
           ToastService.show(msg, 'long', 'Booking Update Failed');
-        } else {
+        } catch (e) {
           ToastService.show('Error connecting to server to update booking', 'long', 'Connection Error');
         }
-      });
+      });*/
   };
 
   $scope.rejectRequest = function() {
     //console.log('I will now reject');
-    BookingService.reject({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
+
+    $scope.new_request_data.ride_status = 'rejected';
+    BookingService.addToList($scope.new_request_data);
+    $scope.new_request_data = {};
+    $scope.current_request = {};
+    $scope.modal.hide();
+    //ToastService.show('Booking request has been rejected', 'long', 'Booking Rejected');
+    /*BookingService.reject({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
       .success(function(response) {
         //console.log('Accept response', response);
         $scope.current_request = {};
@@ -134,13 +157,13 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
         ToastService.show('Booking request has been rejected', 'long', 'Booking Rejected');
       })
       .error(function(err) {
-        if (err.status > 1) {
-          var msg = !!err.data.error ? err.data.error : 'Request could not be rejected at this time';
+        try {
+          var msg = !!err.error ? err.error : err.data.error;
           ToastService.show(msg, 'long', 'Booking Update Failed');
-        } else {
+        } catch (e) {
           ToastService.show('Error connecting to server to update booking', 'long', 'Connection Error');
         }
-      });
+      });*/
   };
 
   $scope.changeStatus = function() {
@@ -168,7 +191,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   };
 
   $scope.updateProfile = function() {
-    UsersService.update({token: Auth.token, user: $scope.profileData},
+    UsersService.update($scope.profileData,
       function(response) {
         if (response.status == 'success') {
           //$scope.profile_msg = '';
@@ -191,7 +214,49 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
     )
   };
 
+  $scope.startTrip = function () {
+
+    $scope.current_request.ride_status = 'started';
+    ToastService.show('Ride has now started', 'long', 'Start Ride');
+
+    /*BookingService.startRide({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
+      .success(function(response) {
+        //console.log('Accept response', response);
+        $scope.current_request.ride_status = 'started';
+        ToastService.show('Ride has now started', 'long', 'Start Ride');
+      })
+      .error(function(err) {
+        try {
+          var msg = !!err.error ? err.error : err.data.error;
+          ToastService.show(msg, 'long', 'Start Ride Failed');
+        } catch (e) {
+          ToastService.show('Error connecting to server to update booking', 'long', 'Connection Error');
+        }
+      });*/
+  };
+
+  $scope.endTrip = function () {
+
+    $scope.current_request.ride_status = 'ended';
+    ToastService.show('Trip has now ended. An invoice will be generated for you', 'long', 'End Ride');
+    /*BookingService.endRide({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
+      .success(function(response) {
+        //console.log('Accept response', response);
+        $scope.current_request.ride_status = 'started';
+        ToastService.show('Ride has now ended', 'long', 'End Ride');
+      })
+      .error(function(err) {
+        try {
+          var msg = !!err.error ? err.error : err.data.error;
+          ToastService.show(msg, 'long', 'End Ride Failed');
+        } catch (e) {
+          ToastService.show('Error connecting to server to update booking', 'long', 'Connection Error');
+        }
+      });*/
+  };
+
   Auth.fetch();
+  $scope.profileData = Auth.user;
   $scope.startPusher();
 
 })
@@ -281,4 +346,13 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 .controller('InvoiceCtrl', function($scope, $stateParams, InvoicesService) {
   var currentId = $stateParams.id;
   $scope.invoice = InvoicesService.getInvoice(currentId);
+})
+
+.controller('BookingCtrl', function($scope, $stateParams, BookingService) {
+  var currentBooking = BookingService.findInList($stateParams.id);
+  if (!currentBooking) {
+    // Handle error here
+  } else {
+    $scope.booking = currentBooking;
+  }
 });

@@ -5,36 +5,34 @@
   <ion-content>
     <form ng-submit="updateProfile()">
       <div class="list">
-        <div class="jasmine-errored">{{update_status_msg}}</div>
         <br>
-        <input type="hidden" ng-model="profileData.user_type" value="Driver">
         <label class="item item-input">
           <span class="input-label">First Name</span>
-          <input type="text" ng-model="profileData.first_name">
+          <input type="text" required ng-model="profileData.user.first_name">
         </label>
         <label class="item item-input">
           <span class="input-label">Last Name</span>
-          <input type="text" ng-model="profileData.last_name">
+          <input type="text" required ng-model="profileData.user.last_name">
         </label>
         <label class="item item-input">
           <span class="input-label">Date of Birth</span>
-          <input type="date" ng-model="profileData.dob">
+          <input type="text" required ng-model="profileData.user.dob" value="{{profileData.user.dob | date:'dd/MM/yyyy'}}">
         </label>
         <label class="item item-input">
           <span class="input-label">Car Type</span>
-          <input type="text" ng-model="profileData.car_model">
+          <input type="text" required ng-model="profileData.driver.car_model">
         </label>
         <label class="item item-input">
           <span class="input-label">Car Colour</span>
-          <input type="text" ng-model="profileData.car_color">
+          <input type="text" required ng-model="profileData.driver.car_color">
         </label>
         <label class="item item-input">
           <span class="input-label">Plate Number</span>
-          <input type="text" ng-model="profileData.plate_number">
+          <input type="text" required ng-model="profileData.driver.plate_number">
         </label>
         <label class="item item-input">
           <span class="input-label">Email Address</span>
-          <input type="text" value="{{profileData.email_address}}">
+          <input type="text" value="{{profileData.user.email}}">
         </label>
         <label class="item">
           <button class="button button-block button-positive" type="submit">Update</button>

@@ -8,39 +8,39 @@
         <h3>{{status_msg}}</h3>
         <label class="item item-input">
           <span class="input-label">First Name</span>
-          <input type="text" ng-model="registerData.first_name">
+          <input type="text" required ng-model="registerData.first_name">
         </label>
         <label class="item item-input">
           <span class="input-label">Last Name</span>
-          <input type="text" ng-model="registerData.last_name">
+          <input type="text" required ng-model="registerData.last_name">
         </label>
         <label class="item item-input">
           <span class="input-label">Date of Birth</span>
-          <input type="date" ng-model="registerData.dob">
+          <input type="date" required ng-model="registerData.dob">
         </label>
         <label class="item item-input">
           <span class="input-label">Car Type</span>
-          <input type="text" ng-model="registerData.car_model">
+          <input type="text" required ng-model="registerData.car_model">
         </label>
         <label class="item item-input">
           <span class="input-label">Car Colour</span>
-          <input type="text" ng-model="registerData.car_color">
+          <input type="text" required ng-model="registerData.car_color">
         </label>
         <label class="item item-input">
           <span class="input-label">Plate Number</span>
-          <input type="text" ng-model="registerData.plate_number">
+          <input type="text" required ng-model="registerData.plate_number">
         </label>
         <label class="item item-input">
           <span class="input-label">Email Address</span>
-          <input type="text" ng-model="registerData.email">
+          <input type="text" required ng-model="registerData.email">
         </label>
         <label class="item item-input">
           <span class="input-label">Password</span>
-          <input type="password" ng-model="registerData.password">
+          <input type="password" required ng-model="registerData.password">
         </label>
         <label class="item item-input">
           <span class="input-label">Confirm Password</span>
-          <input type="password" ng-model="registerData.password_confirmation">
+          <input type="password" required ng-model="registerData.password_confirmation">
         </label>
         <label class="item">
           <button class="button button-block button-positive" type="submit">Register</button>

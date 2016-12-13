@@ -1,7 +1,62 @@
-<ion-view view-title="Search">
+<ion-view view-title="Dashboard">
   <ion-content>
     <h1>Dashboard</h1>
-    <ion-label>Show New Request</ion-label>
+    <br>
+    <div class="list card" ng-if="!current_request.id">
+      <div class="item item-divider">
+        New Booking Request
+      </div>
+      <a href="#/app/booking/{{new_request_data.id}}" class="item item-icon-left" ng-if="new_request_data.id">
+        <i class="icon ion-email-unread"></i>
+        <span class="capitalize">{{new_request_data.start_location}}</span> to
+        <span class="capitalize">{{new_request_data.destination}}</span>
+      </a>
+      <div class="item item-text-wrap" ng-if="!new_request_data.id">
+        No new booking request at this time
+      </div>
+    </div>
+
+    <div class="list card" ng-if="current_request.id">
+      <div class="item item-divider">
+        <span ng-if="current_request.ride_status != 'ended'">Current</span>
+        <span ng-if="current_request.ride_status == 'ended'">Completed</span>
+        Booking
+      </div>
+      <a href="#/app/booking/{{current_request.id}}" class="item item-icon-left">
+        <i class="icon ion-email-read"></i>
+        <span class="capitalize">{{current_request.start_location}}</span> to
+        <span class="capitalize">{{current_request.destination}}</span>
+      </a>
+      <div class="item item-text-wrap">
+        <button class="button button-block button-balanced" type="button" ng-if="current_request.ride_status == 'accepted'" ng-click="startTrip()">
+          Start Ride
+        </button>
+        <button class="button button-block button-energized" type="button" ng-if="current_request.ride_status == 'started'" ng-click="endTrip()">
+          End Ride
+        </button>
+      </div>
+      <div class="item item-text-wrap">
+      </div>
+    </div>
+
+    <div class="list card">
+      <div class="item item-divider">
+        Recent Request History
+      </div>
+      <div class="item item-text-wrap" ng-if="!request_history.data">
+        No request history at this time
+      </div>
+      <div ng-if="request_history.data">
+        <a ng-repeat="booking in request_history.data" href="#/app/booking/{{booking.id}}" class="item item-icon-left">
+          <i class="icon ion-email"></i>
+          <span class="capitalize">{{booking.start_location}}</span> to
+          <span class="capitalize">{{booking.destination}}</span>
+        </a>
+      </div>
+
+    </div>
+
+
     <br>
     <button class="button button-block button-positive" type="button" ng-click="showNewRequest()">New Request</button>
   </ion-content>
