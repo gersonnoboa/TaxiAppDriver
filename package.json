@@ -2,6 +2,10 @@
   "name": "taxi_home_driver",
   "version": "1.1.1",
   "description": "taxi_home_driver: An Ionic project",
+  "main": "www/js/app.js",
+  "engines": {
+    "node": "6.9.1"
+  },
   "dependencies": {
     "gulp": "^3.5.6",
     "gulp-sass": "^2.0.4",
