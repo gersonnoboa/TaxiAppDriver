@@ -12,9 +12,11 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
     return {
       user : _user,
       token : "",
+      id : "",
       setUser : function(aUser){
         this.user = aUser;
         this.token = this.user.user.token;
+        this.id = this.user.user.id;
         $cookieStore.put('current.user', this.user);
       },
       remove: function () {
@@ -27,6 +29,7 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
         try {
           this.user = $cookieStore.get('current.user');
           this.token = this.user.user.token;
+          this.id = this.user.user.id;
         } catch (e) {
           this.user = {};
           this.token = "";
@@ -48,7 +51,7 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
   .service('UsersService', function ($resource) {
 
     return $resource(ROOT_URI+'/users', {}, {
-      login: {method:'POST', url: ROOT_URI+'/drivers/login', headers: {'Content-Type': 'application/json'} },
+      login: {method:'POST', url: ROOT_URI+'/drivers/login' },
       logout: {method:'POST', url: ROOT_URI+'/drivers/logout'},
       setStatus: {method: 'POST', url: ROOT_URI+'/drivers/status'},
       update: {method: 'PUT', url: ROOT_URI+'/drivers/'},
@@ -66,8 +69,8 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
     //var pusher = new Pusher(PUSHER_KEY);
     return {
       onMessage: function (callback) {
-        //var chan = 'driver_'+Auth.user.id;
-        var chan = 'driver_6';
+        var chan = 'driver_'+Auth.id;
+        //var chan = 'driver_6';
         var channel = pusher.subscribe(chan);
         channel.bind('ride', function (data) {
           callback(data);

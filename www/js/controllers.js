@@ -101,7 +101,8 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   $scope.showNewRequest = function() {
     //$scope.new_request_msg = '';
-    var channel = Pusher.instances[0].channel('driver_6');
+    var chan = 'driver_'+Auth.user.id;
+    var channel = Pusher.instances[0].channel(chan);
     channel.emit('ride',
       {action: 'new_booking', booking: {id: 6, start_location: 'Raatuse 22', destination: 'J.Liivi 2',
         customer_first_name: 'Victor', customer_last_name: 'Aluko', customer_phone_number: '555555'}
