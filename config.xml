@@ -19,4 +19,7 @@
   <feature name="StatusBar">
     <param name="ios-package" value="CDVStatusBar" onload="true"/>
   </feature>
+  <allow-navigation href="*" />
+  <allow-intent href="*" />
+  <access origin="http://*.heroku.com" />
 </widget>
