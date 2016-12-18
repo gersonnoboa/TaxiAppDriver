@@ -64,12 +64,12 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
       encrypted: true
     });
     //var pusher = new Pusher(PUSHER_KEY);
-    var channel = pusher.subscribe('ride');
     return {
       onMessage: function (callback) {
-        var chan = 'driver_'+Auth.user.id;
-        //console.log('subscribed_channel: '+chan,Auth.user);
-        channel.bind(chan, function (data) {
+        //var chan = 'driver_'+Auth.user.id;
+        var chan = 'driver_6';
+        var channel = pusher.subscribe(chan);
+        channel.bind('ride', function (data) {
           callback(data);
         });
       }
