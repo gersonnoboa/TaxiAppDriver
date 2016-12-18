@@ -61,10 +61,9 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   $scope.startPusher = function() {
     if (!PUSHER_STATED) {
-      console.log('Pusher starting');
+      console.log('pushed listening');
       PusherService.onMessage(function(response) {
-        console.log(response);
-        return;
+        console.log('Data received', response);
         //$scope.asyncNotification = response.message;
         if (!!response.action) {
           if (response.action == 'new_booking') {
@@ -135,30 +134,30 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.acceptRequest = function() {
     // show loader
 
-    $scope.current_request = $scope.new_request_data;
+    /*$scope.current_request = $scope.new_request_data;
     $scope.statusData.status = 'busy';
     $scope.current_request.ride_status = 'accepted';
     $scope.new_request_data = {};
     $scope.modal.hide();
     BookingService.addToList($scope.current_request);
+     */
     //ToastService.show('Booking request has been accepted', 'long', 'Booking Accepted');
-    /*BookingService.accept({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
+    BookingService.accept({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
       .success(function(response) {
         //console.log('Accept response', response);
         if (response.status == 'success') {
           $scope.current_request = $scope.new_request_data;
-          $scope.current_request.status = response.data.status;
+          $scope.statusData.status = 'busy';
+          $scope.current_request.ride_status = 'accepted';
           $scope.new_request_data = {};
           $scope.modal.hide();
           $scope.display_msg = "";
-          $scope.statusData.status = 'busy';
+          BookingService.addToList($scope.current_request);
           ToastService.show('Booking request has been accepted', 'long', 'Booking Accepted');
           // Carry out post actions here
         } else {
           // Sad face path
-          $ionicPopup.alert({
-            title: 'Booking Update Failed', template: 'Booking could not be accepted at this time'
-          });
+          ToastService.show('Booking could not be accepted at this time', 'long', 'Booking Update Failed');
         }
       })
       .error(function(err) {
@@ -168,21 +167,24 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
         } catch (e) {
           ToastService.show('Error connecting to server to update booking', 'long', 'Connection Error');
         }
-      });*/
+      });
   };
 
   $scope.rejectRequest = function() {
     //console.log('I will now reject');
 
-    $scope.new_request_data.ride_status = 'rejected';
+    /*$scope.new_request_data.ride_status = 'rejected';
     BookingService.addToList($scope.new_request_data);
     $scope.new_request_data = {};
     $scope.current_request = {};
     $scope.modal.hide();
+     */
     //ToastService.show('Booking request has been rejected', 'long', 'Booking Rejected');
-    /*BookingService.reject({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
+    BookingService.reject({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
       .success(function(response) {
         //console.log('Accept response', response);
+        $scope.new_request_data.ride_status = 'rejected';
+        BookingService.addToList($scope.new_request_data);
         $scope.current_request = {};
         $scope.new_request_data = {};
         $scope.modal.hide();
@@ -196,7 +198,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
         } catch (e) {
           ToastService.show('Error connecting to server to update booking', 'long', 'Connection Error');
         }
-      });*/
+      });
   };
 
   $scope.changeStatus = function() {
@@ -253,10 +255,10 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   $scope.startTrip = function () {
 
-    $scope.current_request.ride_status = 'started';
+    /*$scope.current_request.ride_status = 'started';
     ToastService.show('Ride has now started', 'long', 'Start Ride');
-
-    /*BookingService.startRide({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
+     */
+    BookingService.startRide({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
       .success(function(response) {
         //console.log('Accept response', response);
         $scope.current_request.ride_status = 'started';
@@ -269,14 +271,15 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
         } catch (e) {
           ToastService.show('Error connecting to server to update booking', 'long', 'Connection Error');
         }
-      });*/
+      });
   };
 
   $scope.endTrip = function () {
 
-    $scope.current_request.ride_status = 'ended';
+    /*$scope.current_request.ride_status = 'ended';
     ToastService.show('Trip has now ended. An invoice will be generated for you', 'long', 'End Ride');
-    /*BookingService.endRide({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
+     */
+    BookingService.endRide({booking: {id: $scope.new_request_data.id}, user: {token: Auth.token}})
       .success(function(response) {
         //console.log('Accept response', response);
         $scope.current_request.ride_status = 'started';
@@ -289,7 +292,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
         } catch (e) {
           ToastService.show('Error connecting to server to update booking', 'long', 'Connection Error');
         }
-      });*/
+      });
   };
 
   Auth.fetch();
