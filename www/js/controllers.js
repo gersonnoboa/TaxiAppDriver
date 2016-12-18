@@ -363,7 +363,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
     }, function (data) {
       if (data.status > 1) {
         // Server response
-        var msg = !!data.data.error ? data.data.error : 'Error while trying to login';
+        var msg = !!data.data.error ? data.data.error : 'Error while trying to login: '+JSON.stringify(data);
         ToastService.show(msg, 'long', 'Login Error');
       } else {
         // Connection error
