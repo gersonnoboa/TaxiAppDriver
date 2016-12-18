@@ -4,7 +4,7 @@
   "description": "taxi_home_driver: An Ionic project",
   "main": "www/js/app.js",
   "scripts": {
-    "start": "node www/js/app.js"
+    "start": "ionic serve"
   },
   "engines": {
     "node": "6.9.1"
