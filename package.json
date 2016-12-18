@@ -2,9 +2,9 @@
   "name": "taxi_home_driver",
   "version": "1.1.1",
   "description": "taxi_home_driver: An Ionic project",
-  "main": "www/js/app.js",
+  "main": "app.js",
   "scripts": {
-    "start": "ionic serve"
+    "start": "node app.js"
   },
   "engines": {
     "node": "6.9.1"
