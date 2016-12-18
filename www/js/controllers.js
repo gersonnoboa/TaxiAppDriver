@@ -327,7 +327,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
       }
     }, function (data) {
       if (data.status > 1) {
-        var msg = !!data.data.error ? data.data.error : 'Registration failed. Kindly review all required fields';
+        var msg = !!data.data.error ? data.data.error : 'Registration failed. Review all fields: '+JSON.stringify(data);
         ToastService.show(msg, 'long', 'Registration Error');
       } else {
         ToastService.show('Error connecting to server to complete registration', 'long', 'Connection Error');

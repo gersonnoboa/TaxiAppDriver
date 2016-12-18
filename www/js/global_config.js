@@ -3,7 +3,7 @@
  */
 
 //var ROOT_URI = 'http://localhost:3000/api';
-var ROOT_URI = 'http://strs-taxi.herokuapp.com/api';
+var ROOT_URI = 'http://strs-taxi2.herokuapp.com/api';
 
 var USER_TOKEN = '';
 
