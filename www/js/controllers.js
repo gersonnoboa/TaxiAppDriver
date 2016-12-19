@@ -39,6 +39,8 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
     if (NO_AUTH_URIS.indexOf(urlObj.url) < 0 && !Auth.isLoggedIn()) {
       //console.log('DENY access');
       $location.path('/login');
+    } else {
+      $scope.driver_status = Auth.user.driver.status;
     }
   });
 
@@ -56,6 +58,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   $scope.request_history = {};
   $scope.display_msg = "";
   $scope.statusData = {status: 'inactive'};
+  $scope.driver_status = "";
   $scope.status_msg = "";
   $scope.profileData = {};
 
@@ -202,19 +205,22 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   };
 
   $scope.changeStatus = function() {
-    UsersService.setStatus({user: {token: Auth.token}, driver: {status: $scope.statusData.status}},
+    UsersService.setStatus({user: {token: Auth.token}, driver: {status: $scope.profileData.driver.status}},
       function(response) {
         //console.log('Status change data', response);
         // on success
         if (response.status == 'success') {
           ToastService.show('New status successfully set', 'long', 'Update Successful');
-          if ($scope.statusData.status == 'active') {
+          if ($scope.profileData.driver.status == 'active') {
             LOCATION_TIMEOUT = DEFAULT_TIMEOUT;
             $scope.updateLocation();
           } else {
             LOCATION_TIMEOUT = 0;
           }
           // Triggers to test workflow of active status
+          Auth.user.driver.status = $scope.profileData.driver.status;
+          // Update the cookie
+          Auth.updateCookie();
         } else {
           var msg = !!response.error ? response.error :  'Setting new status failed';
           ToastService.show(msg, 'long', 'Status Update Failed');
@@ -236,6 +242,9 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
           //$scope.profile_msg = '';
           activeUser = $scope.profileData;
           ToastService.show('Profile successfully updated', 'long', 'Update Successful');
+          Auth.user.driver = $scope.profileData;
+          // Update the cookie
+          Auth.updateCookie();
         } else {
           $ionicPopup.alert({
             title: 'Update Failed', template: 'Profile update failed. Please review all fields'
