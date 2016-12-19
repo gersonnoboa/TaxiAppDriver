@@ -6,8 +6,8 @@
       <div class="card">
         <a href="#/app/booking/{{new_request_data.id}}" class="item item-icon-left" ng-click="closeModal()">
           <i class="icon ion-email"></i>
-          From <span class="capitalize">{{new_request_data.start_location}}</span> to
-          <span class="capitalize">{{new_request_data.destination}}</span>
+          <strong>From: </strong><span class="capitalize">{{new_request_data.start_location}}</span> <br>
+          <strong>To: </strong><span class="capitalize">{{new_request_data.destination}}</span>
         </a>
       </div>
       <button class="button button-block button-positive" type="button" ng-click="acceptRequest()">Accept</button>

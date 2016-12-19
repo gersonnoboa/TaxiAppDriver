@@ -8,8 +8,8 @@
       </div>
       <a href="#/app/booking/{{new_request_data.id}}" class="item item-icon-left" ng-if="new_request_data.id">
         <i class="icon ion-email-unread"></i>
-        <span class="capitalize">{{new_request_data.start_location}}</span> to
-        <span class="capitalize">{{new_request_data.destination}}</span>
+        <strong>From: </strong><span class="capitalize">{{new_request_data.start_location}}</span> <br>
+        <strong>To: </strong><span class="capitalize">{{new_request_data.destination}}</span>
       </a>
       <div class="item item-text-wrap" ng-if="!new_request_data.id">
         No new booking request at this time
