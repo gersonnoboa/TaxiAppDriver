@@ -17,6 +17,9 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
         this.user = aUser;
         this.token = this.user.user.token;
         this.driver_id = this.user.driver.id;
+        this.updateCookie();
+      },
+      updateCookie: function() {
         $cookieStore.put('current.user', this.user);
       },
       remove: function () {
