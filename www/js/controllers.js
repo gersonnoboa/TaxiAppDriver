@@ -61,14 +61,14 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
 
   $scope.startPusher = function() {
     if (!PUSHER_STATED) {
-      console.log('pushed listening');
       PusherService.onMessage(function(response) {
-        console.log('Data received', response);
+        console.log('Pusher Data received', response);
         //$scope.asyncNotification = response.message;
         if (!!response.action) {
           if (response.action == 'new_booking') {
             $scope.new_request_msg = "You have a new pickup request";
             $scope.new_request_data = response.booking;
+            $scope.new_request_data.customer = response.customer
             $scope.new_request_data.ride_status = 'new';
             BookingService.addToList($scope.new_request_data);
             $scope.modal.show();
@@ -79,7 +79,6 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
           }
         }
       });
-      console.log('Pusher started');
       PUSHER_STATED = true;
     }
   };
@@ -104,8 +103,8 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
     var chan = 'driver_'+Auth.user.id;
     var channel = Pusher.instances[0].channel(chan);
     channel.emit('ride',
-      {action: 'new_booking', booking: {id: 6, start_location: 'Raatuse 22', destination: 'J.Liivi 2',
-        customer_first_name: 'Victor', customer_last_name: 'Aluko', customer_phone_number: '555555'}
+      {action: 'new_booking', booking: {id: 6, start_location: 'Raatuse 22', destination: 'J.Liivi 2'},
+        customer: {first_name: 'Victor', last_name: 'Aluko', email: '555555'}
       }
 
     );

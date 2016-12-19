@@ -12,11 +12,11 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
     return {
       user : _user,
       token : "",
-      id : "",
+      driver_id : "",
       setUser : function(aUser){
         this.user = aUser;
         this.token = this.user.user.token;
-        this.id = this.user.user.id;
+        this.driver_id = this.user.driver.id;
         $cookieStore.put('current.user', this.user);
       },
       remove: function () {
@@ -29,7 +29,7 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
         try {
           this.user = $cookieStore.get('current.user');
           this.token = this.user.user.token;
-          this.id = this.user.user.id;
+          this.driver_id = this.user.driver.id;
         } catch (e) {
           this.user = {};
           this.token = "";
@@ -69,7 +69,7 @@ angular.module('taxi_home_driver.services', ['ngResource','ngCookies'])
     //var pusher = new Pusher(PUSHER_KEY);
     return {
       onMessage: function (callback) {
-        var chan = 'driver_'+Auth.id;
+        var chan = 'driver_'+Auth.driver_id;
         //var chan = 'driver_6';
         var channel = pusher.subscribe(chan);
         channel.bind('ride', function (data) {
