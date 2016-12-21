@@ -9,8 +9,6 @@ describe('Login Test Suite', function () {
   var loginCtrl, scope, $httpBackend = {};
 
   beforeEach(module('taxi_home_driver'));
-  beforeEach(module('taxi_home_driver.controllers'));
-  beforeEach(module('taxi_home_driver.services'));
 
   beforeEach(inject(function ($rootScope, $controller, _$httpBackend_) {
     scope = $rootScope.$new();

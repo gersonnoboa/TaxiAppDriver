@@ -39,7 +39,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
     if (NO_AUTH_URIS.indexOf(urlObj.url) < 0 && !Auth.isLoggedIn()) {
       //console.log('DENY access');
       $location.path('/login');
-    } else {
+    } else if (Auth.isLoggedIn()) {
       $scope.driver_status = Auth.user.driver.status;
     }
   });
@@ -348,7 +348,7 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
   }
 })
 
-.controller('LoginCtrl', function ($scope, $timeout, $location, $state, $ionicPopup, UsersService, Auth, ToastService) {
+.controller('LoginCtrl', function ($scope, $state, $ionicPopup, UsersService, Auth, ToastService) {
   $scope.loginData = {};
   $scope.login_msg = "";
 
@@ -360,7 +360,6 @@ angular.module('taxi_home_driver.controllers', ['taxi_home_driver.services'])
     UsersService.login({user: $scope.loginData}, function (data) {
       // Check the response
       if (!data.error) {
-        //console.log('response data:',data);
         // successful login
         Auth.setUser(data.data);
         $scope.loginData = {};

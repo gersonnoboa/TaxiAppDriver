@@ -1,5 +1,5 @@
 // Karma configuration
-// Generated on Mon Nov 21 2016 14:19:43 GMT+0200 (FLE Standard Time)
+// Generated on Wed Dec 21 2016 21:06:48 GMT+0200 (FLE Standard Time)
 
 module.exports = function(config) {
   config.set({
@@ -17,18 +17,14 @@ module.exports = function(config) {
     files: [
       'www/lib/ionic/js/ionic.bundle.js',
       'www/lib/angular-mocks/angular-mocks.js',
+      'www/lib/angular-resource/angular-resource.min.js',
+      'www/lib/angular-cookies/angular-cookies.min.js',
       'www/lib/pusher/dist/pusher.js',
-      'www/js/*.js',
       'www/lib/pusher-test-stub/dist/pusher-test-stub.js',
+      'www/js/*.js',
       'test/spec/**/*.js'
     ],
 
-
-    plugins: [
-      'karma-jasmine',
-      'karma-phantomjs-launcher',
-      'karma-chrome-launcher'
-    ],
 
     // list of files to exclude
     exclude: [
